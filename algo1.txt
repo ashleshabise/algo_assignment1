@@ -1,0 +1,175 @@
+ 1/************************************************************
+*
+*   MTH 524A
+*   
+        Homework-1
+*   
+        Group ID : 04
+*  
+        Problem a
+*   
+        Algorithm
+*************************************************************/
+
+    /*   a<-Length of the given original cube 
+          
+           L<- Given positive integer to divide the original cube into partitions of length a/L
+    	
+ lMatrix[][][] is a 3d array to keep count of number of pints in each partition    */
+ /*
+	pointList is a 3d array storing the heads of linked lists corresponding
+	to each l[]
+ */
+ 
+1   partition(r,L, int lMatrix[L][L][L], struct node* pointList[L][L][L]) 
+2  validity check for r: r should be a point inside cube
+3  validity check for L: L>0
+4  Initialise  x[3] l[3]  binary[3] bString
+ /*
+ Procedure to generate the point l[] using binary manipulation in order 
+ to write them in a file. 
+ 
+ 	1  Generate a 3-bit binary string based on comparison between x and l
+ 	2. Write l[] in a file permuting the generated binary string
+ 	3. Update indexes corresponding to l[i]'s in the lMatrix
+ 
+ */
+4  for (i<-0; i<3; i++)	
+5 	 x[i]<-(r[i]*L/(float)a)
+6 	 l[i] <- (int)x[i]
+ 	 // for x1, temp<-1. binary = 0 | 1 = 1
+ 	 // for x2, temp<-0, binary =  1<<1 = 10 | 0 = 10
+ 	 // for x3, temp<-1, binary  = 10<<1  = 100 | 1 = 101
+ //checking whether l[i] is an integer
+7  temp <-  (l[i]==x[i]) ? 1 : 0
+8 	 bString <- bString<<1 | temp
+9 	 binary[i] <- temp
+10 	for ( i<-1; i<= bString; i++)   
+11 		result <- bString & i
+ /* We use done[8] array to store the bool of already obtained 'result' */
+12		if (result && !done[result]) 
+ /* store each bit of result in different variables and write l[] accordingly */
+13			b1<-result&4 ? 1:0
+14 			b2<-result&2 ? 1:0
+15 			b3<-result&1 ? 1:0
+ 			// update the lMatrix
+16 			lMatrix[l[0]-b1][l[1]-b2][l[2]-b3]++
+		// push r[] in the corresponding pointList[l1][l2][l3] 
+17			push(&pointList[l1][l2][l3],r)
+18 			done[result]<-1
+ 		
+19 	return TRUE
+ }
+ 
+20 bool partition-all(int L, char* inputFileName, char* outputFileName)
+21 {
+	K<-0
+22 	//Open the input File in read mode
+23 	if (fin != NULL) 
+ 	//	Read one line from the input file and store in str
+24 		while (fgets(str,SIZE,fin) != NULL) 
+25 			temp1 <- x1
+26 			temp2 <- x2
+ 			temp3 <- x3
+ 
+ 	//Get formatted data from str in x1,x2,x3
+ 
+27 			if (x1 >= a || x1 <= 0 || x1==temp1 ) 28			print 'Invalid Input'
+29 				return FALSE
+30  			if (x2>=a || x2<=0 || x2==temp2)
+31				print 'Invalid Input'
+32 				return FALSE
+33  			if (x3>=a || x3<=0 || x3==temp3) 
+34 				print 'Invalid Input'
+35 				return FALSE
+ 
+36 			store r[] in R[K]
+37 			R[K] <- r
+38 			K++
+39 	else 
+40		print 'Could not open the input File  \n'
+41		return 1
+ 
+42	Close the input file
+43 	for(i<-0; i<K; ++i)
+44		Call partition(R[i],L,lMatrix,pointList)
+ 
+45	Open the output file in write mode
+ 
+46 	for ( i<-0; i<L; i++) 
+47 		for ( j<-0 j<L; j++)  
+48 			for ( k<-0 k<L; k++) 
+49          Write i j k in a line in output File
+50          Write l1 l2 l3 in a line in output File
+51          Write r1 r2 r3 in a line in output File using pointList[i][j][k]  
+52 	return TRUE
+ }
+
+
+Analysis:-
+Step	Cost	Times		Remarks
+  1	c1	n		
+  2	c2	const		
+  3	c3	const		
+  4	c4	const		
+  5	c5	4		
+  6	c6	3	 This initial step of for loop runs 4 times
+  7	c7	3	this step is inside for loop and hence runs 3 times
+  8 	c8	3	this step is inside for loop and hence runs 3 times
+  9 	c9	3		
+  10 	c10	3		
+  11 	c11	3
+  12          c12          24
+  13          c13          const
+  14          c14          const
+  15          c15          const
+  16          c16          const
+  17          c17          const
+  		
+12-22 c12	const		within for loop all steps takes const amount of time
+  23 	c23	const		
+  24 	c24	const		
+  25 	c25	const		
+  26 	c26	K		where n is no. of inputs given in the file	
+                                                     /*********************************
+   29 	c29	K	         *all steps within  this while loop                                                          
+                                                         * takes const amount of time                                                              
+   32 	c32	K		
+   35 	c35	K 	              
+                                                      *********************************/
+  38 	c38	const		
+  39 	c39	const		
+  40 	c40	const				
+  42	c42	const		
+  43	c43				
+  44	c44	const		
+  45	c45	K+1		
+  46	c46	K*n		
+  47	c47	const		
+  48	c48	L+1	because partition function takes const amount of time
+  49	c49	L(L+1)		/*********************************
+  50	c50	L^2(L+1)		*  all the steps within this
+  51	c51	const		*  this while loop
+  52	c52	const		*  takes constant amount
+  53	c53	const		*  of time
+  				*  and consequently, O(n) 
+  	                  		*  amount of time	
+                                                                   *********************************/
+ 		
+					
+For partition function:
+		Now, let T’(n) be the total time taken by the number of mathematical operations performed by partition function then
+
+		T'(n) = O(8L^3)
+
+Now, let T(n) be the total number of mathematical operations performed by partition-all then
+	
+	T(n) = K * O(partition())
+	T(n) = O(K*L^3)
+
+
+*********************************************************************
+
+
+
+ 

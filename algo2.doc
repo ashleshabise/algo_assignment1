@@ -1,0 +1,65 @@
+/************************************************************
+*
+*   MTH 524A
+*   Homework-1
+*   Group ID : 04
+*   Problem b
+*************************************************************/
+	
+MATRIX(L, l, P, Q)
+	/* Determination of Matrix A[i][j]*/     
+1   	for i <-- 0 to M-1 do
+2   	  for j <-- 0 to N-1 do
+3   		temp <-- 0
+4   		for k <-- 0 to 2 do
+5   			temp <-- temp + pow( Q[i][k]-P[j][k]  , 2)
+6   		temp <-- sqrt(temp)   					//storing value of |qi-pj| in temp
+7   		A[i][j] <-- temp:sin(temp)/temp?1             				//store value of sin(temp)/temp as 1 if temp<-0
+8   /* Find the Product of A(transpose) and A. */
+9   	for i <-- 0 to N-1 do
+10  	for j <-- 0 to i do
+11  		result[i][j] <-- 0
+12  		for k <-- 0 to N-1 do
+13  	 		result[i][j] <-- result[i][j] + (A[k][i] * A[k][j])
+14  	result[j][i] <-- result[i][j]						//A(transpose)*A is a symmetric matrix.
+15  /* Write the product into an output file */
+16  	Open the output Matrix File in write mode.
+17  	for i <-- 0 to M-1 do
+18  		for j <-- 0 to M-1 do
+19  			Write i, j and corresponding product Matrix value into the output file
+20  	Close the output Matrix File
+************************************************************************
+
+
+Analysis:-
+Step	Cost	Times		Remarks
+  1	c1	M+1		for loop starts here, and this statement implemented M+1 times.
+  2	c2	M(N+1)		this loop is inside the first loop, so this implemented M(N+1) times.
+  3	c3	MN		
+  4	c4	4MN		here, third loop starts.
+  5	c5	3MN		this statement is inside all 3 loops.
+  6	c6	MN		this statement is outside 3rd loop.
+  7	c7	MN		this statement calculates all the values for matrix A[][].
+  8	0			comment doesn’t require any time to run.
+  9	c9	N+1		for loop runs till the condition doesn’t get false, i.e., 1time extra than N.
+  10	c10	t(i)		this loop runs upto i of previous loop.
+  11	c11	N t(i)
+  12	c12	(N+1) N t(i)	here, third loop starts
+  13	c13	N N t(i)	this statement is within all 3 loops
+  14	c14	N t(i)		this statement is outside the 3rd loop
+  15	c15	0		/*comments*/
+  16	c16	const		
+  17	c17	M+1		here first for loop starts
+  18	c18	(M+1)M		here second loop starts
+  19	c19	MM		this statement in inside both for loops
+  20	c20	const		
+
+	Let, T(M,N) be time complexity for the code. Then we multiply the time taken in each step and add the total amount of time taken in each step. Please note that the time taken to run a comment is 0. Since there are M number of inputs for Q and N number of inputs for P we have taken the corresponding loops to calculate the A matrix first and then find the product of its transpose with the matrix itself.
+Calculating T(M,N) for WORST CASE:
+		T(M,N)=c1(M+1)+c2(M(N+1))+c3(MN)+c4(4MN)+c5(3MN)+c6(MN)+c7(MN)+0(c8)+c9(N+1)+c10(t(i))+c11(N*t(i))+c12((N+1)N t(i))+
+			c13(N*N*t(i))+c14(N*t(i))+c15*0+c16+c17(M+1)+c18((M+1)M)+c19(M)(M)+c20
+		T(M,N)=k1(N)(N)(N)
+
+BEST CASE: N=1.
+ *********************************************************************
+
